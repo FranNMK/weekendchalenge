@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Unique page title for the Projects page -->
+  <title>Projects | Alex Mwangi</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --bg:        #0d0d0d;
+      --surface:   #161616;
+      --border:    #2a2a2a;
+      --gold:      #c9a84c;
+      --gold-soft: #e8c97a;
+      --text:      #e8e4dc;
+      --muted:     #888;
+      --ff-head:   'Playfair Display', Georgia, serif;
+      --ff-body:   'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-weight: 300;
+      line-height: 1.75;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo { font-family: var(--ff-head); font-size: 1.2rem; color: var(--gold); text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.875rem; font-weight: 400;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 80px 5% 60px;
+      border-bottom: 1px solid var(--border);
+      animation: fadeUp 0.8s ease both;
+    }
+    .eyebrow {
+      font-size: 0.75rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
+    }
+    h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      line-height: 1.15; color: var(--text);
+    }
+    h1 em { font-style: italic; color: var(--gold-soft); }
+    .page-intro { max-width: 580px; color: var(--muted); margin-top: 1rem; font-size: 1rem; }
+
+    /* ── Project cards ── */
+    .projects-section { padding: 60px 5%; }
+
+    .project-card {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 3rem;
+      align-items: start;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+      background: var(--surface);
+      transition: border-color 0.25s;
+    }
+    .project-card:hover { border-color: var(--gold); }
+
+    /* Alternate image side for odd projects — creates visual rhythm */
+    .project-card.reverse { grid-template-columns: 1fr 400px; }
+    .project-card.reverse .project-image { order: 2; }
+    .project-card.reverse .project-info  { order: 1; }
+
+    @media (max-width: 860px) {
+      .project-card,
+      .project-card.reverse {
+        grid-template-columns: 1fr;
+      }
+      .project-card.reverse .project-image,
+      .project-card.reverse .project-info { order: unset; }
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-info { padding: 2.5rem 2.5rem 2.5rem 0; }
+    .project-card.reverse .project-info { padding: 2.5rem 0 2.5rem 2.5rem; }
+    @media (max-width: 860px) {
+      .project-info,
+      .project-card.reverse .project-info { padding: 1.75rem; }
+    }
+
+    .project-number {
+      font-size: 0.72rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    /* h2 — project title */
+    h2 {
+      font-family: var(--ff-head);
+      font-size: 1.7rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1rem; }
+
+    strong { color: var(--gold-soft); font-weight: 500; }
+    em     { color: var(--gold-soft); font-style: italic; }
+
+    /* Tech tags — an unordered list styled as pill badges */
+    .tech-tags {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .tech-tags li {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* Status badge */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .badge-planned    { background: #1e1a09; border: 1px solid #5a4a10; color: var(--gold); }
+    .badge-inprogress { background: #091a1e; border: 1px solid #105a5a; color: #4acad4; }
+    .badge-complete   { background: #091e09; border: 1px solid #105a10; color: #4ad44a; }
+
+    .project-link {
+      display: inline-block;
+      margin-top: 0.75rem;
+      color: var(--gold);
+      font-size: 0.875rem;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .project-link:hover { border-color: var(--gold); }
+
+    /* ── Summary table ── */
+    .table-section {
+      padding: 20px 5% 80px;
+      border-top: 1px solid var(--border);
+    }
+
+    h3 {
+      font-family: var(--ff-head);
+      font-size: 1.3rem;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    caption {
+      text-align: left;
+      font-size: 0.72rem;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding-bottom: 1rem;
+    }
+
+    thead th {
+      background: var(--surface);
+      color: var(--gold);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 0.9rem 1.2rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    tbody tr:hover td { background: var(--surface); }
+
+    /* h4 h5 h6 for hierarchy completeness */
+    h4 { font-family: var(--ff-head); font-size: 1rem; color: var(--gold); margin: 2rem 0 0.4rem; }
+    h5 { font-family: var(--ff-body);  font-size: 0.88rem; font-weight: 500; color: var(--muted); margin-bottom: 0.3rem; }
+    h6 { font-family: var(--ff-body);  font-size: 0.78rem; font-weight: 400; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 5%;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    footer p { font-size: 0.82rem; color: var(--muted); }
+    footer a { color: var(--gold); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <a href="index.html" class="nav-logo">Alex Mwangi</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Page Header ── -->
+  <header class="page-header">
+    <p class="eyebrow">What I've Been Building</p>
+    <!-- h1: top-level heading for this page -->
+    <h1>My <em>Projects</em></h1>
+    <p class="page-intro">
+      Three projects — some planned, some in progress. Each one is a deliberate
+      attempt to apply what I'm learning and stretch slightly beyond my comfort zone.
+    </p>
+  </header>
+
+  <!-- ============================================================
+       PROJECT CARDS
+       Each card includes: image, h2 title, description,
+       tech tag list, status badge, and a project link.
+       ============================================================ -->
+  <section class="projects-section">
+
+    <!-- PROJECT 1 -->
+    <article class="project-card">
+      <div class="project-image">
+        <!-- Replace with your own screenshot or mockup image -->
+        <img
+          src="images/project-recipe.jpg"
+          alt="Screenshot of a recipe finder web app with a search bar and card layout"
+        />
+      </div>
+      <div class="project-info">
+        <p class="project-number">Project 01</p>
+        <!-- h2: project title -->
+        <h2>Recipe Finder App</h2>
+        <p>
+          A <strong>responsive recipe discovery tool</strong> where users can search
+          by ingredient and browse results laid out in a clean card grid.
+          The goal was to practise <em>semantic HTML</em>, CSS Grid, and working
+          with structured data. No JavaScript yet — purely layout and styling.
+        </p>
+        <ul class="tech-tags">
+          <li>HTML5</li>
+          <li>CSS Grid</li>
+          <li>Flexbox</li>
+          <li>Responsive Design</li>
+        </ul>
+        <span class="badge badge-complete">✓ Complete</span>
+        <br />
+        <a
+          href="https://github.com/yourusername/recipe-finder"
+          target="_blank"
+          rel="noopener"
+          class="project-link"
+        >View on GitHub →</a>
+      </div>
+    </article>
+
+    <!-- PROJECT 2 — reversed layout for visual variety -->
+    <article class="project-card reverse">
+      <div class="project-image">
+        <img
+          src="images/project-portfolio.jpg"
+          alt="Preview of this very portfolio website, showing the dark homepage design"
+        />
+      </div>
+      <div class="project-info">
+        <p class="project-number">Project 02</p>
+        <h2>Personal Portfolio Website</h2>
+        <p>
+          The site you're looking at right now. A <strong>four-page HTML/CSS portfolio</strong>
+          built from scratch as a Week 2 bootcamp challenge.
+          The design goal was a dark editorial aesthetic —
+          <em>distinctive but not distracting</em> — so the content stays front and centre.
+        </p>
+        <p>
+          Every line was written by hand, no templates or frameworks.
+          The heading hierarchy, semantic structure, and accessibility
+          considerations were all deliberate design decisions, not afterthoughts.
+        </p>
+        <ul class="tech-tags">
+          <li>HTML5</li>
+          <li>CSS3</li>
+          <li>Git</li>
+          <li>GitHub Pages</li>
+        </ul>
+        <span class="badge badge-inprogress">⟳ In Progress</span>
+        <br />
+        <a
+          href="https://github.com/yourusername/week2-portfolio"
+          target="_blank"
+          rel="noopener"
+          class="project-link"
+        >View Repository →</a>
+      </div>
+    </article>
+
+    <!-- PROJECT 3 -->
+    <article class="project-card">
+      <div class="project-image">
+        <img
+          src="images/project-dashboard.jpg"
+          alt="Wireframe sketch of a personal finance dashboard showing income and expense charts"
+        />
+      </div>
+      <div class="project-info">
+        <p class="project-number">Project 03</p>
+        <h2>Personal Finance Dashboard</h2>
+        <p>
+          A <strong>planned UI project</strong> — a clean dashboard that visualises
+          monthly income, expenses, and savings. The wireframes are done and
+          the colour palette is chosen. This will be the first project I tackle
+          once I've covered <em>JavaScript fundamentals</em>.
+        </p>
+        <p>
+          The plan is to store data in the browser's local storage and render
+          interactive charts using a lightweight library.
+          Ambitious? Yes. That's the point.
+        </p>
+        <ul class="tech-tags">
+          <li>HTML5</li>
+          <li>CSS3</li>
+          <li>JavaScript (Planned)</li>
+          <li>Chart.js (Planned)</li>
+        </ul>
+        <span class="badge badge-planned">◌ Planned</span>
+        <br />
+        <!-- Link to a design mockup or planning doc instead of code if not yet built -->
+        <a
+          href="https://github.com/yourusername/finance-dashboard"
+          target="_blank"
+          rel="noopener"
+          class="project-link"
+        >View Planning Repo →</a>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ============================================================
+       SUMMARY TABLE — required by the checklist
+       Gives recruiters a fast overview of all three projects.
+       ============================================================ -->
+  <section class="table-section">
+
+    <!-- h3: section heading within the page -->
+    <h3>Projects at a Glance</h3>
+
+    <!-- h4, h5, h6 here to satisfy the full h1–h6 requirement on this page -->
+    <h4>How I choose what to build</h4>
+    <h5>Priority: real-world usefulness over complexity</h5>
+    <h6>Each project targets a different HTML/CSS concept</h6>
+
+    <table>
+      <caption>Summary of All Current Projects</caption>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Project Name</th>
+          <th>Core Tech</th>
+          <th>Status</th>
+          <th>Deployed?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td>Recipe Finder App</td>
+          <td>HTML5, CSS Grid, Flexbox</td>
+          <td>Complete</td>
+          <td>Yes — GitHub Pages</td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td>Personal Portfolio Website</td>
+          <td>HTML5, CSS3, Git</td>
+          <td>In Progress</td>
+          <td>Yes — GitHub Pages</td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td>Personal Finance Dashboard</td>
+          <td>HTML5, CSS3, JavaScript</td>
+          <td>Planned</td>
+          <td>Not yet</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <p>© 2025 Alex Mwangi. Built with plain HTML &amp; CSS — no frameworks, no shortcuts.</p>
+    <p>
+      <a href="https://github.com/yourusername" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener">LinkedIn</a> ·
+      <a href="mailto:alex@example.com">alex@example.com</a>
+    </p>
+  </footer>
+
+</body>
+</html>
